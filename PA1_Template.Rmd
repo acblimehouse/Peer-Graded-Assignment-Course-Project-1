@@ -1,0 +1,70 @@
+---
+title: PA1_Template
+author: "ACBLimehouse"
+date: "6/4/2017"
+output: html_document
+---
+
+# R Markdown and Data Setup
+``` {r local directory, echo = FALSE}
+Local.Directory <- "/Users/adamlimehouse/Desktop/Dropbox/03 Projects Folder/Economic and Policy Analysis/Intro to Data Science R Files/Reproducible Research - Peer Graded Assessments/Course Project 1"
+```
+## Initial Setup
+```{r chunk setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### Data Download and Import
+In downloading data, I try to use a standard code sequence. In order to do so, I set up the code block to use the data objects below.  
+I also take this opportunity to set up the libraries I plan to use in analysis.  
+```{r data download and import}
+DataURL <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
+File.Name <- "Activity monitoring data.zip"
+Data.file <- "activity.csv"
+Data.Name <- "Activity.Data"
+ColumnNames <- c("steps", "date", "interval")
+setwd(Local.Directory)
+library(data.table)
+library(dplyr)
+library(dtplyr)
+```
+### Get the Data
+```{r}
+if (!file.exists(File.Name)){
+  download.file(DataURL, File.Name, method="curl")
+}
+if (!file.exists(Data.file)) { 
+  unzip(File.Name)
+}
+```
+### Load & Process the Data
+Loading and processing the data is relatively simple in this case. The main processing step involved is transforming the "date" variable from a string into an R date format.
+```{r}
+if (!exists(Data.Name)){
+  Activity.Data <- (
+      read.csv(file = Data.file, header = TRUE, sep = ",",
+                na.strings = "NA", col.names = ColumnNames))
+  Activity.Data$date <- as.Date(Activity.Data$date,format("%Y-%m-%d"))
+}
+```
+## Data Analysis
+###What is mean total number of steps taken per day?
+For this part of the assignment, you can ignore the missing values in the dataset.
+1.	Calculate the total number of steps taken per day
+2.	If you do not understand the difference between a histogram and a barplot, research the difference between them. Make a histogram of the total number of steps taken each day
+3.	Calculate and report the mean and median of the total number of steps taken per day
+
+###What is the average daily activity pattern?
+1.	Make a time series plot (i.e. 𝚝𝚢𝚙𝚎 = "𝚕") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
+2.	Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+
+###Imputing missing values
+Note that there are a number of days/intervals where there are missing values (coded as.𝙽𝙰). The presence of missing days may introduce bias into some calculations or summaries of the data.
+1.	Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with 𝙽𝙰s)
+2.	Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
+3.	Create a new dataset that is equal to the original dataset but with the missing data filled in.
+Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+
+###Are there differences in activity patterns between weekdays and weekends?
+For this part the 𝚠𝚎𝚎𝚔𝚍𝚊𝚢𝚜() function may be of some help here. Use the dataset with the filled-in missing values for this part.
+1.	Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
+
